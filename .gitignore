@@ -1,0 +1,13 @@
+ 
+*.class
+*.log
+
+.idea/
+.vscode/
+.DS_Store
+
+/target/
+/node_modules/
+/vendor/
+
+.env
