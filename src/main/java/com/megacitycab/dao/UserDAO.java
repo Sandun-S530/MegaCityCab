@@ -277,6 +277,37 @@ public class UserDAO {
         }
         return status;
     }
+    
+    public static boolean hasAssignedBookings(int userId) {
+        boolean hasBookings = false;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "SELECT COUNT(*) FROM bookings WHERE driver_id = ?";
+
+        try {
+            conn = DBConnection.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            rs = ps.executeQuery();
+
+            if (rs.next() && rs.getInt(1) > 0) {
+                hasBookings = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return hasBookings;
+    }
+
 
 
 }

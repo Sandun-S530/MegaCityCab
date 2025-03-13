@@ -11,9 +11,17 @@ public class DeleteUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int userId = Integer.parseInt(request.getParameter("userId"));
-        boolean deleted = UserDAO.deleteUser(userId);
 
         HttpSession session = request.getSession();
+
+        boolean hasBookings = UserDAO.hasAssignedBookings(userId);
+        if (hasBookings) {
+            session.setAttribute("message", "Cannot delete user: They have assigned bookings.");
+            response.sendRedirect("AdminDashboardServlet");
+            return;
+        }
+
+        boolean deleted = UserDAO.deleteUser(userId);
         if (deleted) {
             session.setAttribute("message", "User deleted successfully.");
         } else {
